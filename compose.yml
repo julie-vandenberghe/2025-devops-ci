@@ -1,0 +1,23 @@
+services:
+  db:
+    image: postgres:15
+    container_name: postgres-db
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    volumes: 
+      - db_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    #ici on indique à Compose de construire l'image de ce service à partir du Dockerfile situé dans ce dossier
+    container_name: to-do-app
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+
+volumes: 
+    db_data:
