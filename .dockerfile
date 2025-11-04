@@ -1,7 +1,40 @@
-FROM node:LTS
+# ---------- Étape 1 : compilation
+FROM node:lts-alpine AS builder
 
-# Installer pnpm
-RUN npm install -g pnpm
+# Crée un dossier de travail (définit où toutes les commandes suivantes seront exec)
+WORKDIR /app
+
+COPY package.json pnpm-lock.yaml ./
+
+# Installer pnpm via corepack (utilise exactement la version définie dans pnpm-lock.yaml)
+RUN corepack enable
+
+# Installer les dépendances
+RUN pnpm install
+
+# Copier le reste du code
+COPY . .
+
+# On lance le build
+RUN pnpm build
+
+# ---------- Étape 2 : execution
+FROM node:lts-alpine as runner
+
+WORKDIR /app
+
+# Utiliser la version exacte du projet
+RUN corepack enable
+
+# Copie uniquement le build + package.json
+COPY package.json ./
+COPY --from=builder /app .
+
+# Installer seulement les dépendances de prod
+RUN pnpm install --prod
 
 # Passer à l'utilisateur non-root
 USER node
+
+# Commandes au démarrage
+CMD ["node"]
