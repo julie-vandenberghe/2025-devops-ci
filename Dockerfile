@@ -1,5 +1,5 @@
 # ---------- Étape 1 : compilation
-FROM node:lts-alpine AS builder
+FROM node:18-alpine AS builder
 
 # Crée un dossier de travail (définit où toutes les commandes suivantes seront exec)
 WORKDIR /app
@@ -19,7 +19,7 @@ COPY . .
 RUN pnpm build
 
 # ---------- Étape 2 : execution
-FROM node:lts-alpine as runner
+FROM node:18-alpine as runner
 
 WORKDIR /app
 
@@ -28,7 +28,7 @@ RUN corepack enable
 
 # Copie uniquement le build + package.json
 COPY package.json ./
-COPY --from=builder /app .
+COPY --from=builder /app/.output ./.output
 
 # Installer seulement les dépendances de prod
 RUN pnpm install --prod
@@ -36,5 +36,5 @@ RUN pnpm install --prod
 # Passer à l'utilisateur non-root
 USER node
 
-# Commandes au démarrage
-CMD ["node"]
+# Démarrage du serveur
+CMD ["node", ".output/server/index.mjs"]
