@@ -1,5 +1,5 @@
 # ---------- Étape 1 : compilation
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 
 # Crée un dossier de travail (définit où toutes les commandes suivantes seront exec)
 WORKDIR /app
@@ -19,7 +19,7 @@ COPY . .
 RUN pnpm build
 
 # ---------- Étape 2 : execution
-FROM node:18-alpine as runner
+FROM node:20-alpine as runner
 
 WORKDIR /app
 
