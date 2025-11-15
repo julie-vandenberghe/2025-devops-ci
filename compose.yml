@@ -10,6 +10,18 @@ services:
     volumes: 
       - db_data:/var/lib/postgresql/data
 
+  migrate:
+    build:
+      context: .
+      target: builder
+    command: ["pnpm", "db:push"]
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+  
   web:
     build: .
     #ici on indique à Compose de construire l'image de ce service à partir du Dockerfile situé dans ce dossier
@@ -18,6 +30,9 @@ services:
       - "3000:3000"
     env_file:
       - .env
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
 
 volumes: 
     db_data:
