@@ -1,0 +1,34 @@
+# Metadata
+name: CI
+
+permissions:
+  actions: read
+  contents: read
+
+# Event that triggers the workflow
+on:
+  push:
+    branches:
+      - main
+
+# Define the job
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+
+    # Defines steps for the job
+    steps:
+      # Get the code (étape qui télécharge le code dans la VM GitHub)
+      - uses: actions/checkout@v4
+
+      # I need node.js for this app
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      # Install dependencies
+      - run: pnpm install
+
+      # Run unit tests
+      - run: pnpm test
