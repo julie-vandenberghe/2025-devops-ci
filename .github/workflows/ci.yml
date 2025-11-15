@@ -11,7 +11,7 @@ on:
     branches:
       - main
 
-# Define the job
+# Define the jobs
 jobs:
   unit-tests:
     runs-on: ubuntu-latest
@@ -59,7 +59,7 @@ jobs:
       - run: pnpm install
 
       # Install Playwright browsers
-      - run: pnpm exec playwright install
+      - run: pnpm exec playwright install --with-deps
 
       # Run e2e tests
       - run: pnpm test:e2e
