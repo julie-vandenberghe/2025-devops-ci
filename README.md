@@ -37,6 +37,9 @@ Then edit the `.env` file with your database configuration:
 ```bash
 # Database connection string
 DATABASE_URL=postgres://username:password@host:port/database_name
+POSTGRES_USER=username
+POSTGRES_PASSWORD=password
+POSTGRES_DB=db
 ```
 
 **Examples:**
@@ -60,6 +63,19 @@ pnpm db:push
 ```
 
 **Note:** For development, `pnpm db:push` is usually sufficient as it directly syncs your schema with the database.
+
+## Continuous Integration
+
+This project includes automated checks for development and testing.
+
+- **Unit tests**: Run with Vitest
+- **End-to-end tests**: Run with Playwright
+- **Code formatting & linting**: Check with Prettier and ESLint
+- **Storybook build**: Verify component documentation builds successfully
+- **Docker image check**: Build and run a Docker image to ensure it starts correctly
+- **Build verification**: Ensure production build artifacts are generated
+
+All these steps run automatically on each push to the `main` branch.
 
 # Available Commands
 
@@ -188,9 +204,12 @@ This application uses environment variables for configuration. All environment v
 
 ### Required Environment Variables
 
-| Variable       | Description                  | Example                                             |
-| -------------- | ---------------------------- | --------------------------------------------------- |
-| `DATABASE_URL` | PostgreSQL connection string | `postgres://postgres:postgres@localhost:5432/todos` |
+| Variable            | Description                                      | Example                                             |
+| ------------------ | ----------------------------------------------- | -------------------------------------------------- |
+| `POSTGRES_DB`       | The PostgreSQL database name created on startup | `todos`                                            |
+| `POSTGRES_USER`     | The PostgreSQL username                          | `postgres`                                        |
+| `POSTGRES_PASSWORD` | The PostgreSQL user password                     | `postgres`                                        |
+| `DATABASE_URL`      | PostgreSQL connection URL for the application   | `postgres://postgres:postgres@localhost:5432/todos` |
 
 ### Environment Variable Format
 
@@ -205,18 +224,27 @@ postgres://[username]:[password]@[host]:[port]/[database_name]
 **Local Development:**
 
 ```bash
+POSTGRES_DB=todos
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
 DATABASE_URL=postgres://postgres:postgres@localhost:5432/todos
 ```
 
 **Docker PostgreSQL:**
 
 ```bash
+POSTGRES_DB=todos
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
 DATABASE_URL=postgres://postgres:postgres@localhost:5432/todos
 ```
 
 **Production (example with cloud database):**
 
 ```bash
+POSTGRES_DB=todos_production
+POSTGRES_USER=myuser
+POSTGRES_PASSWORD=mypassword
 DATABASE_URL=postgres://myuser:mypassword@db.example.com:5432/todos_production
 ```
 
