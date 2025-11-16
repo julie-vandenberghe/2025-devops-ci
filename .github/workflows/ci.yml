@@ -117,6 +117,30 @@ jobs:
         # Run Lint
         - run: pnpm lint
       
+  documentation-build-check:
+    runs-on: ubuntu-latest
+    needs:
+      - unit-tests
+      - e2e-tests
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - run: pnpm install
+
+      # Build Storybook
+      - run: pnpm build-storybook echo "Storybook built succssfully"
+        
   docker-build-check:
     runs-on: ubuntu-latest
     needs:
@@ -129,15 +153,11 @@ jobs:
       # Build Docker image
       - run: docker build -t todo-app:ci-test .
 
-      # Verify Docker image exists
+      # Verify Docker image exists + check img size
       - run: docker images todo-app:ci-test
 
       # Run Docker container test
-      - run: |
-          docker run --rm todo-app:ci-test echo "Container started successfully"
-      
-      # Check image size 
-      - run: docker image ls todo-app:ci-test
+      - run: docker run --rm todo-app:ci-test echo "Container started successfully"
   
   app-build-check:
     runs-on: ubuntu-latest
