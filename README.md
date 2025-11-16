@@ -66,16 +66,45 @@ pnpm db:push
 
 ## Continuous Integration
 
-This project includes automated checks for development and testing.
+This project includes automated checks for development and testing:
 
 - **Unit tests**: Run with Vitest
 - **End-to-end tests**: Run with Playwright
-- **Code formatting & linting**: Check with Prettier and ESLint
+- **Code formatting**: Check with Prettier 
+- **Linting**: Check with ESLint
 - **Storybook build**: Verify component documentation builds successfully
 - **Docker image check**: Build and run a Docker image to ensure it starts correctly
 - **Build verification**: Ensure production build artifacts are generated
 
 All these steps run automatically on each push to the `main` branch.
+
+## Running with Docker
+
+You can build and run the app using Docker or Docker Compose.
+
+``` bash
+# Build using Dockerfile
+docker build -t todo-app .
+
+# Run the img
+docker run -p 3000:3000 --env-file .env todo-app
+
+# Build using Docker Compose
+docker-compose up -d
+
+# Stop all services
+docker-compose down
+```
+
+This will:
+- Start a PostgreSQL database (db)
+- Apply database migrations (migrate)
+- Launch the web server (web) on port 3000
+
+### Healthchecks:
+- db service: pg_isready to ensure PostgreSQL is ready before migrations run
+- web service: HTTP healthcheck to ensure the server is running (curl -f http://localhost:3000) 
+
 
 # Available Commands
 
