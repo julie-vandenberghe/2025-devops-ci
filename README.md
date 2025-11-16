@@ -101,10 +101,9 @@ This will:
 - Apply database migrations (migrate)
 - Launch the web server (web) on port 3000
 
-### Healthchecks:
+### Healthchecks
 - db service: pg_isready to ensure PostgreSQL is ready before migrations run
 - web service: HTTP healthcheck to ensure the server is running (curl -f http://localhost:3000) 
-
 
 # Available Commands
 
