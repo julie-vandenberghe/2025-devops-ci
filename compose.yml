@@ -36,6 +36,10 @@ services:
     depends_on:
       migrate:
         condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000 || exit 1"]
+      #on essaie de faire une requête HTTP sur le service web. -f > curl retourne une erreur si le code HTTP est 4xx ou 5xx. Si la requête réussie, la cmd retourne 0 > Docker considère le container healthy. Si culr échoue, la cmd retourne 1 > Docker considérera le container unhealthy 
+      #on peut ajouter d'autres options, comme interval, retries, start_period et timeout. Les valeurs par défaut : interval = 30s, timeout = 30s, retriers = 3, start_period = 0s
 
 volumes: 
     db_data:
